@@ -1,0 +1,74 @@
+{
+  "title": "Custom API Schema",
+  "version": "1.0.0",
+  "baseUrl": "https://api.example.com",
+  "endpoints": [
+    {
+      "path": "/api/login",
+      "method": "POST",
+      "parameters": [],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "example": "admin"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "password123"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Login successful"
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+      }
+    },
+    {
+      "path": "/api/search",
+      "method": "GET",
+      "parameters": [
+        {
+          "name": "q",
+          "in": "query",
+          "required": false,
+          "type": "string",
+          "example": "test"
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "required": false,
+          "type": "integer",
+          "default": 10,
+          "minimum": 1,
+          "maximum": 100
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Search results"
+        }
+      }
+    }
+  ],
+  "securityDefinitions": {
+    "apiKey": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "X-API-Key"
+    }
+  }
+}

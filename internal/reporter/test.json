@@ -1,0 +1,62 @@
+{
+  "summary": {
+    "total_requests": 2,
+    "total_anomalies": 1,
+    "duration": 41,
+    "target_url": "https://api.example.com",
+    "risk_level": "NONE",
+    "critical_findings": 0,
+    "high_findings": 0,
+    "medium_findings": 0,
+    "low_findings": 0
+  },
+  "findings": [
+    {
+      "endpoint": "/api/posts",
+      "method": "POST",
+      "severity": "",
+      "type": "",
+      "description": "Server error",
+      "status_code": 500,
+      "response_time": 200000000,
+      "timestamp": "0001-01-01T00:00:00Z"
+    }
+  ],
+  "statistics": {
+    "average_response_time": 150000000,
+    "max_response_time": 200000000,
+    "min_response_time": 100000000,
+    "status_code_distribution": {
+      "200": 1,
+      "500": 1
+    },
+    "error_rate": 0.5,
+    "anomaly_rate": 0.5
+  },
+  "timeline": [
+    {
+      "timestamp": "0001-01-01T00:00:00Z",
+      "event": "Anomaly Detected",
+      "description": "POST /api/posts: Server error"
+    }
+  ],
+  "endpoints": {
+    "GET /api/users": {
+      "total_requests": 1,
+      "total_anomalies": 0,
+      "status_codes": {
+        "200": 1
+      },
+      "average_time": 50000000
+    },
+    "POST /api/posts": {
+      "total_requests": 1,
+      "total_anomalies": 1,
+      "status_codes": {
+        "500": 1
+      },
+      "average_time": 100000000
+    }
+  },
+  "timestamp": "2025-11-12T18:58:42.200101+01:00"
+}

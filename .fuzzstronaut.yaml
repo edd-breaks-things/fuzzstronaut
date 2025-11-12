@@ -1,0 +1,33 @@
+# Fuzzstronaut Configuration File
+
+# Number of concurrent workers
+workers: 10
+
+# Rate limit (requests per second)
+rate-limit: 100
+
+# Request timeout in seconds
+timeout: 30
+
+# Output report file
+output: fuzz-report.json
+
+# Verbose output
+verbose: false
+
+# Additional headers
+headers:
+  - "User-Agent: Fuzzstronaut/1.0"
+  - "Accept: application/json"
+
+# Authentication (uncomment to use)
+# auth-type: bearer
+# auth-value: your-token-here
+
+# Or for Basic auth:
+# auth-type: basic
+# auth-value: username:password
+
+# Or for API key:
+# auth-type: apikey
+# auth-value: X-API-Key:your-api-key

@@ -1,0 +1,76 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Dependency directories (remove the comment below to include it)
+# vendor/
+
+# Go workspace file
+go.work
+go.work.sum
+
+# Build output
+fuzzstronaut
+/fuzzstronaut
+bin/
+/bin/
+
+# IDE specific files
+.idea/
+*.swp
+*.swo
+*~
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Test coverage
+coverage.txt
+coverage.html
+*.cover
+
+# Fuzzing output and reports
+fuzz-report.json
+fuzz-report.html
+fuzz-report.md
+*.report.json
+*.report.html
+*.report.md
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+tmp/
+temp/
+
+# Local environment files
+.env
+.env.local
+.env.*.local
+
+# Debug files
+debug
+__debug_bin*
+
+# Profiling
+*.prof
+*.pprof
+
+# Local configuration overrides (but keep the example)
+.fuzzstronaut.local.yaml
+fuzzstronaut.local.yaml
