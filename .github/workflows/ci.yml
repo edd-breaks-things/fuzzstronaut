@@ -62,7 +62,7 @@ jobs:
           cache: true
 
       - name: Build binary
-        run: go build -v ./cmd/fuzzstronaut
+        run: go build -v -o fuzzstronaut ./cmd/fuzzstronaut/main.go
 
       - name: Verify binary
         run: ./fuzzstronaut --version || ./fuzzstronaut -h
