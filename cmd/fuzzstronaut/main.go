@@ -208,6 +208,7 @@ func runFuzz(cmd *cobra.Command, args []string) error {
 		Headers:    headers,
 		AuthHeader: authHeader,
 		AuthValue:  authHeaderValue,
+		Verbose:    verbose,
 	}
 
 	// Create reporter

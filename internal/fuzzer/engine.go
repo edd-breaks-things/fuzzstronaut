@@ -28,6 +28,7 @@ type FuzzConfig struct {
 	Headers       map[string]string
 	AuthHeader    string
 	AuthValue     string
+	Verbose       bool
 }
 
 // FuzzResult represents the result of a single fuzz test
@@ -131,7 +132,27 @@ func (e *Engine) fuzzEndpoint(endpoint schema.Endpoint) {
 		zap.String("path", endpoint.Path),
 		zap.String("method", endpoint.Method))
 	testCases := e.generateTestCases(endpoint)
-	logger.Debugf("Generated %d test cases for %s %s", len(testCases), endpoint.Method, endpoint.Path)
+	
+	// Log mutation strategies being used when verbose
+	if e.config.Verbose {
+		logger.Debug("🧪 Generating test cases",
+			zap.String("endpoint", fmt.Sprintf("%s %s", endpoint.Method, endpoint.Path)),
+			zap.Int("count", len(testCases)),
+			zap.Any("strategies", e.config.Strategies))
+		
+		// Log sample payloads for first few test cases
+		for i, tc := range testCases {
+			if i >= 3 {
+				break // Only show first 3 examples
+			}
+			logger.Debug("  Sample test case",
+				zap.Int("index", i+1),
+				zap.Any("parameters", tc.Parameters),
+				zap.Any("body", tc.Body))
+		}
+	} else {
+		logger.Debugf("Generated %d test cases for %s %s", len(testCases), endpoint.Method, endpoint.Path)
+	}
 
 	for _, testCase := range testCases {
 		select {
@@ -327,6 +348,16 @@ func (e *Engine) executeTestCase(tc TestCase) FuzzResult {
 		req.Header.Set(e.config.AuthHeader, e.config.AuthValue)
 	}
 
+	// Log detailed request information when verbose
+	if e.config.Verbose {
+		logger.Debug("🚀 Sending fuzzing request",
+			zap.String("method", req.Method),
+			zap.String("url", req.URL.String()),
+			zap.Any("headers", req.Header),
+			zap.Any("query_params", tc.Parameters),
+			zap.Any("body_payload", tc.Body))
+	}
+
 	startTime := time.Now()
 	resp, err := e.client.Do(req)
 	result.ResponseTime = time.Since(startTime)
@@ -348,6 +379,19 @@ func (e *Engine) executeTestCase(tc TestCase) FuzzResult {
 	buf := new(bytes.Buffer)
 	_, _ = buf.ReadFrom(resp.Body)
 	result.Response = buf.Bytes()
+
+	// Log response details when verbose
+	if e.config.Verbose {
+		responsePreview := string(result.Response)
+		if len(responsePreview) > 500 {
+			responsePreview = responsePreview[:500] + "... (truncated)"
+		}
+		logger.Debug("📨 Response received",
+			zap.Int("status_code", result.StatusCode),
+			zap.Duration("response_time", result.ResponseTime),
+			zap.Int("response_size", len(result.Response)),
+			zap.String("response_preview", responsePreview))
+	}
 
 	result.Anomaly, result.AnomalyReason = e.detectAnomaly(result)
 
@@ -386,6 +430,13 @@ func (e *Engine) buildRequestWithContext(ctx context.Context, tc TestCase) (*htt
 		if err != nil {
 			return nil, fmt.Errorf("failed to marshal request body: %w", err)
 		}
+		
+		// Log the actual JSON payload being sent when verbose
+		if e.config.Verbose && len(bodyBytes) > 0 {
+			logger.Debug("📦 Request body JSON",
+				zap.String("raw_json", string(bodyBytes)))
+		}
+		
 		bodyReader = bytes.NewReader(bodyBytes)
 	} else {
 		bodyReader = bytes.NewReader([]byte{})
