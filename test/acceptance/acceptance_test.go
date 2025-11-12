@@ -36,7 +36,7 @@ func TestFuzzstronautAcceptance(t *testing.T) {
 		case r.URL.Path == "/api/users" && r.Method == "GET":
 			// Success response
 			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode([]map[string]interface{}{
+			_ = json.NewEncoder(w).Encode([]map[string]interface{}{
 				{"id": 1, "name": "John"},
 				{"id": 2, "name": "Jane"},
 			})
@@ -51,11 +51,11 @@ func TestFuzzstronautAcceptance(t *testing.T) {
 				// Simulate error on injection attempt
 				atomic.AddInt32(&errorCount, 1)
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("Internal Server Error"))
+				_, _ = w.Write([]byte("Internal Server Error"))
 			} else {
 				// Normal creation
 				w.WriteHeader(http.StatusCreated)
-				json.NewEncoder(w).Encode(map[string]interface{}{
+				_ = json.NewEncoder(w).Encode(map[string]interface{}{
 					"id": 3, "name": "Created",
 				})
 			}
@@ -64,18 +64,18 @@ func TestFuzzstronautAcceptance(t *testing.T) {
 			// Simulate occasional errors
 			atomic.AddInt32(&errorCount, 1)
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("Random error"))
+			_, _ = w.Write([]byte("Random error"))
 
 		case count%7 == 0:
 			// Simulate slow response
 			time.Sleep(200 * time.Millisecond)
 			w.WriteHeader(http.StatusOK)
-			w.Write([]byte("Slow response"))
+			_, _ = w.Write([]byte("Slow response"))
 
 		default:
 			// Default success
 			w.WriteHeader(http.StatusOK)
-			w.Write([]byte("OK"))
+			_, _ = w.Write([]byte("OK"))
 		}
 	}))
 	defer mockServer.Close()
@@ -140,7 +140,7 @@ func TestFuzzstronautAcceptance(t *testing.T) {
 	time.Sleep(3 * time.Second)
 
 	// Send interrupt signal
-	fuzzCmd.Process.Signal(os.Interrupt)
+	_ = fuzzCmd.Process.Signal(os.Interrupt)
 
 	// Wait for it to finish (with timeout)
 	done := make(chan error)
@@ -153,7 +153,7 @@ func TestFuzzstronautAcceptance(t *testing.T) {
 		// Process finished
 	case <-time.After(5 * time.Second):
 		// Force kill if not responding
-		fuzzCmd.Process.Kill()
+		_ = fuzzCmd.Process.Kill()
 		t.Log("Had to force kill process")
 	}
 

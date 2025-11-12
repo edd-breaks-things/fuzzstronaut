@@ -127,10 +127,10 @@ func TestEngine_ExecuteTestCase(t *testing.T) {
 		switch r.URL.Path {
 		case "/success":
 			w.WriteHeader(http.StatusOK)
-			w.Write([]byte(`{"status": "ok"}`))
+			_, _ = w.Write([]byte(`{"status": "ok"}`))
 		case "/error":
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(`{"error": "internal server error"}`))
+			_, _ = w.Write([]byte(`{"error": "internal server error"}`))
 		case "/slow":
 			time.Sleep(100 * time.Millisecond)
 			w.WriteHeader(http.StatusOK)
@@ -674,7 +674,7 @@ func TestEngine_ConcurrentExecution(t *testing.T) {
 		mu.Unlock()
 
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("ok"))
+		_, _ = w.Write([]byte("ok"))
 	}))
 	defer server.Close()
 

@@ -65,12 +65,12 @@ func init() {
 	fuzzCmd.Flags().StringP("method", "m", "", "HTTP method to fuzz (GET, POST, PUT, DELETE, etc)")
 	fuzzCmd.Flags().StringP("data", "d", "", "Custom data template file (JSON)")
 
-	fuzzCmd.MarkFlagRequired("schema")
+	_ = fuzzCmd.MarkFlagRequired("schema")
 
 	rootCmd.AddCommand(fuzzCmd)
 	rootCmd.AddCommand(validateCmd)
 
-	viper.BindPFlags(fuzzCmd.Flags())
+	_ = viper.BindPFlags(fuzzCmd.Flags())
 }
 
 func initConfig() {
@@ -116,7 +116,9 @@ func runFuzz(cmd *cobra.Command, args []string) error {
 	if err := logger.InitLogger(logLevel, verbose); err != nil {
 		return fmt.Errorf("failed to initialize logger: %w", err)
 	}
-	defer logger.Sync()
+	defer func() {
+		_ = logger.Sync()
+	}()
 
 	logger.Infof("🚀 Starting fuzzing campaign against: %s", targetURL)
 	logger.Infof("📋 Using schema: %s", schemaFile)
@@ -137,7 +139,7 @@ func runFuzz(cmd *cobra.Command, args []string) error {
 	logger.Debugf("Detected schema format: %s", format)
 
 	// Reset file pointer
-	schemaData.Seek(0, 0)
+	_, _ = schemaData.Seek(0, 0)
 
 	parser, err := schema.NewParser(format)
 	if err != nil {
@@ -296,7 +298,7 @@ func runValidate(cmd *cobra.Command, args []string) error {
 	fmt.Printf("✅ Detected format: %s\n", format)
 
 	// Reset file pointer
-	schemaData.Seek(0, 0)
+	_, _ = schemaData.Seek(0, 0)
 
 	parser, err := schema.NewParser(format)
 	if err != nil {

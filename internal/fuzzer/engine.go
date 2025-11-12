@@ -344,7 +344,7 @@ func (e *Engine) executeTestCase(tc TestCase) FuzzResult {
 	result.StatusCode = resp.StatusCode
 
 	buf := new(bytes.Buffer)
-	buf.ReadFrom(resp.Body)
+	_, _ = buf.ReadFrom(resp.Body)
 	result.Response = buf.Bytes()
 
 	result.Anomaly, result.AnomalyReason = e.detectAnomaly(result)

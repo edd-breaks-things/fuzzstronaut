@@ -2,7 +2,7 @@
   "summary": {
     "total_requests": 2,
     "total_anomalies": 1,
-    "duration": 41,
+    "duration": 83,
     "target_url": "https://api.example.com",
     "risk_level": "NONE",
     "critical_findings": 0,
@@ -58,5 +58,5 @@
       "average_time": 100000000
     }
   },
-  "timestamp": "2025-11-12T18:58:42.200101+01:00"
+  "timestamp": "2025-11-12T19:16:33.068165+01:00"
 }

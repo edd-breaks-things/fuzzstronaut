@@ -239,7 +239,7 @@ func TestReporter_PrintSummary(t *testing.T) {
 
 	// Generate report first
 	report, _ := reporter.GenerateReport("https://api.example.com", time.Now(), time.Now())
-	reporter.SaveReport(report)
+	_ = reporter.SaveReport(report)
 
 	// Capture output
 	var buf bytes.Buffer
