@@ -1,0 +1,12 @@
+{
+  "baseUrl": "https://httpbin.org",
+  "endpoints": [{
+    "path": "/get",
+    "method": "GET",
+    "parameters": [{
+      "name": "test",
+      "in": "query", 
+      "type": "string"
+    }]
+  }]
+}

@@ -353,7 +353,9 @@ func (r *Reporter) saveJSONReport(report *Report) error {
 	if err != nil {
 		return fmt.Errorf("failed to create output file: %w", err)
 	}
-	defer file.Close()
+	defer func() {
+		_ = file.Close()
+	}()
 
 	encoder := json.NewEncoder(file)
 	encoder.SetIndent("", "  ")
@@ -467,7 +469,7 @@ func (r *Reporter) saveMarkdownReport(report *Report) error {
 
 func (r *Reporter) PrintSummary(w io.Writer) {
 	if len(r.results) == 0 {
-		fmt.Fprintln(w, "No results to report.")
+			_, _ = fmt.Fprintln(w, "No results to report.")
 		return
 	}
 
@@ -478,9 +480,9 @@ func (r *Reporter) PrintSummary(w io.Writer) {
 		}
 	}
 
-	fmt.Fprintf(w, "\n=== Fuzzing Summary ===\n")
-	fmt.Fprintf(w, "Total Requests: %d\n", len(r.results))
-	fmt.Fprintf(w, "Anomalies Found: %d\n", anomalies)
-	fmt.Fprintf(w, "Success Rate: %.2f%%\n", (1-float64(anomalies)/float64(len(r.results)))*100)
-	fmt.Fprintf(w, "Report saved to: %s\n", r.config.OutputFile)
+		_, _ = fmt.Fprintf(w, "\n=== Fuzzing Summary ===\n")
+		_, _ = fmt.Fprintf(w, "Total Requests: %d\n", len(r.results))
+		_, _ = fmt.Fprintf(w, "Anomalies Found: %d\n", anomalies)
+		_, _ = fmt.Fprintf(w, "Success Rate: %.2f%%\n", (1-float64(anomalies)/float64(len(r.results)))*100)
+		_, _ = fmt.Fprintf(w, "Report saved to: %s\n", r.config.OutputFile)
 }

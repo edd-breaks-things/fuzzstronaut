@@ -128,7 +128,9 @@ func runFuzz(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return fmt.Errorf("failed to open schema file: %w", err)
 	}
-	defer schemaData.Close()
+	defer func() {
+		_ = schemaData.Close()
+	}()
 
 	logger.Debug("Detecting schema format")
 	format, err := schema.DetectSchemaFormat(schemaData)
@@ -285,7 +287,9 @@ func runValidate(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return fmt.Errorf("failed to open schema file: %w", err)
 	}
-	defer schemaData.Close()
+	defer func() {
+		_ = schemaData.Close()
+	}()
 
 	logger.Debug("Detecting schema format")
 	format, err := schema.DetectSchemaFormat(schemaData)

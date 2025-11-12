@@ -23,7 +23,9 @@ func TestFuzzstronautAcceptance(t *testing.T) {
 	if output, err := buildCmd.CombinedOutput(); err != nil {
 		t.Fatalf("Failed to build: %v\nOutput: %s", err, output)
 	}
-	defer os.Remove(binaryPath)
+	defer func() {
+		_ = os.Remove(binaryPath)
+	}()
 
 	// Create a mock HTTP server
 	var requestCount int32
@@ -112,11 +114,15 @@ func TestFuzzstronautAcceptance(t *testing.T) {
 	if err := os.WriteFile(schemaPath, schemaBytes, 0644); err != nil {
 		t.Fatalf("Failed to write schema: %v", err)
 	}
-	defer os.Remove(schemaPath)
+	defer func() {
+		_ = os.Remove(schemaPath)
+	}()
 
 	// Run the fuzzer
 	reportPath := "test-report.json"
-	defer os.Remove(reportPath)
+	defer func() {
+		_ = os.Remove(reportPath)
+	}()
 
 	t.Log("Running fuzzer against mock server...")
 
@@ -150,7 +156,8 @@ func TestFuzzstronautAcceptance(t *testing.T) {
 
 	select {
 	case <-done:
-		// Process finished
+		// Process finished successfully
+		break
 	case <-time.After(5 * time.Second):
 		// Force kill if not responding
 		_ = fuzzCmd.Process.Kill()

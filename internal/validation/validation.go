@@ -70,10 +70,8 @@ func ValidateURL(rawURL string) (string, error) {
 	}
 
 	// Check for localhost/private IPs in production
-	if isPrivateHost(parsedURL.Host) {
-		// Log warning but allow for testing purposes
-		// In production, you might want to disallow this
-	}
+	// Currently allowing private hosts for testing purposes
+	_ = isPrivateHost(parsedURL.Host) // Note: In production, you might want to disallow this
 
 	// Reconstruct the URL to ensure it's properly formatted
 	return parsedURL.String(), nil

@@ -1,8 +1,8 @@
 # 🚀 Fuzzstronaut
 
-![Fuzzstronaut](media/image.png)
-
 A blazing fast REST API fuzzer for security testing, written in Go with a focus on speed and simplicity.
+
+![Fuzzstronaut](media/image.png)
 
 ## Features
 
@@ -12,6 +12,35 @@ A blazing fast REST API fuzzer for security testing, written in Go with a focus 
 - **⚡ Fast & Concurrent**: Parallel fuzzing with configurable workers and rate limiting
 - **🎯 Anomaly Detection**: Automatic detection of security issues, error disclosures, and performance problems
 - **📊 Comprehensive Reports**: JSON, HTML, and Markdown report formats
+
+## Quick Start - Test a Single Endpoint
+
+The simplest way to test one API endpoint:
+
+```bash
+# 1. Create a minimal schema file (single-endpoint.json)
+echo '{
+  "baseUrl": "https://api.example.com",
+  "endpoints": [{
+    "path": "/api/search",
+    "method": "GET",
+    "parameters": [{
+      "name": "q",
+      "in": "query",
+      "type": "string"
+    }]
+  }]
+}' > single-endpoint.json
+
+# 2. Run the fuzzer
+fuzzstronaut fuzz https://api.example.com -s single-endpoint.json
+
+# 3. With authentication (if needed)
+fuzzstronaut fuzz https://api.example.com -s single-endpoint.json \
+  -a bearer -t "YOUR_TOKEN"
+```
+
+That's it! The fuzzer will test your endpoint with various payloads and generate a report.
 
 ## Installation
 
@@ -27,7 +56,7 @@ cd fuzzstronaut
 go build -o fuzzstronaut cmd/fuzzstronaut/main.go
 ```
 
-## Quick Start - Fuzzing an API with Bearer Token
+## Full Example - Fuzzing Multiple Endpoints with Bearer Token
 
 ### Step 1: Create Your API Schema
 

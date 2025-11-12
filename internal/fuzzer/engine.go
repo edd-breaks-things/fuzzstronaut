@@ -339,7 +339,9 @@ func (e *Engine) executeTestCase(tc TestCase) FuzzResult {
 		result.Error = err
 		return result
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	result.StatusCode = resp.StatusCode
 
@@ -366,11 +368,12 @@ func (e *Engine) buildRequestWithContext(ctx context.Context, tc TestCase) (*htt
 
 	q := parsedURL.Query()
 	for _, param := range tc.Endpoint.Parameters {
-		if param.In == "query" {
+		switch param.In {
+		case "query":
 			if value, ok := tc.Parameters[param.Name]; ok {
 				q.Set(param.Name, fmt.Sprintf("%v", value))
 			}
-		} else if param.In == "path" {
+		case "path":
 			path := strings.ReplaceAll(parsedURL.Path, "{"+param.Name+"}", fmt.Sprintf("%v", tc.Parameters[param.Name]))
 			parsedURL.Path = path
 		}
