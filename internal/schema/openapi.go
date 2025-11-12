@@ -122,6 +122,7 @@ func (p *OpenAPIParser) extractSecurityDefinitions(doc *openapi3.T, schema *APIS
 			sec.Name = secScheme.Value.Name
 		default:
 			// Other security scheme types (oauth2, openIdConnect) are not currently handled
+			continue
 		}
 
 		schema.SecurityDef[name] = sec

@@ -1,5 +1,7 @@
 # 🚀 Fuzzstronaut
 
+![Fuzzstronaut](media/image.png)
+
 A blazing fast REST API fuzzer for security testing, written in Go with a focus on speed and simplicity.
 
 ## Features
